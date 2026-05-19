@@ -1,11 +1,10 @@
-provider "aws" {
-    access_key = "${var.aws_access_key}"
-    secret_key = "${var.aws_secret_key}"
-    region = "${var.region}"
-}
+resource "aws_instance" "servers" {
+  for_each = var.instances
 
-module "s3" {
-    source = "<path-to-S3-folder>"
-    #bucket name should be unique
-    bucket_name = "<Bucket-name>"       
+  ami           = each.value.ami
+  instance_type = var.instance_type
+
+  tags = {
+    Name = each.key
+  }
 }
